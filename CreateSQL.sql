@@ -108,16 +108,15 @@ CREATE TABLE BookIssues (
 );
 
 
-
 CREATE TABLE Fines (
     fine_id INT PRIMARY KEY,                  -- Уникальный идентификатор штрафа
     reader_id INT,                            -- Ссылка на читателя
     amount DECIMAL(10, 2),                    -- Сумма штрафа
     reason VARCHAR(255),                      -- Причина штрафа
     fine_date DATE,                           -- Дата наложения штрафа
+	fine_date_end DATE, 						-- Конец штрафа
     FOREIGN KEY (reader_id) REFERENCES Readers(reader_id)
 );
-
 
 
 CREATE TABLE ReaderAttributes (

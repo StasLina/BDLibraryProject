@@ -111,14 +111,26 @@ INSERT INTO BookIssues (issue_id, reader_id, book_id, issue_date, due_date, retu
 
 
 -- Таблица Fines
-INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date) VALUES
-(1, 2, 100.00, 'Просрочка возврата', TO_DATE('2024-03-25', 'YYYY-MM-DD'));
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(1, 2, 100.00, 'Просрочка возврата', TO_DATE('2024-03-25', 'YYYY-MM-DD'),TO_DATE('2024-10-25', 'YYYY-MM-DD'));
 
-INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date) VALUES
-(2, 3, 200.00, 'Утеря книги', TO_DATE('2024-03-20', 'YYYY-MM-DD'));
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(2, 3, 200.00, 'Утеря книги', TO_DATE('2024-03-20', 'YYYY-MM-DD'),
+TO_DATE('2024-07-20', 'YYYY-MM-DD'));
 
-INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date) VALUES
-(3, 5, 50.00, 'Повреждение книги', TO_DATE('2024-04-05', 'YYYY-MM-DD'));
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(3, 5, 50.00, 'Повреждение книги', TO_DATE('2024-04-05', 'YYYY-MM-DD'), TO_DATE('2024-06-05', 'YYYY-MM-DD'));
+
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(4, 5, 50.00, 'Повреждение книги', TO_DATE('2024-04-05', 'YYYY-MM-DD'), TO_DATE('2026-06-05', 'YYYY-MM-DD'));
+
+
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(5, 2, 50.00, 'Повреждение книги', TO_DATE('2024-04-05', 'YYYY-MM-DD'), TO_DATE('2026-06-05', 'YYYY-MM-DD'));
+
+INSERT INTO Fines (fine_id, reader_id, amount, reason, fine_date, fine_date_end) VALUES
+(6, 3, 50.00, 'Повреждение книги', TO_DATE('2024-04-05', 'YYYY-MM-DD'), TO_DATE('2026-06-05', 'YYYY-MM-DD'));
+
 
 
 -- Таблица ReaderAttributeValues
@@ -142,3 +154,54 @@ INSERT INTO AttributeRestrictions (category_id, attribute_id) VALUES (1, 3);
 INSERT INTO AttributeRestrictions (category_id, attribute_id) VALUES (1, 4);
 INSERT INTO AttributeRestrictions (category_id, attribute_id) VALUES (2, 1);
 INSERT INTO AttributeRestrictions (category_id, attribute_id) VALUES (2, 2);
+
+
+
+
+    
+    -- Заявки на межбиблиотечный абонемент
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (1, 2, 3, TO_DATE('2024-01-15', 'YYYY-MM-DD'), 'ожидает');
+
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (2, 3, 1, TO_DATE('2024-02-01', 'YYYY-MM-DD'), 'выполнен');
+
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (3, 4, 5, TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'ожидает');
+
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (4, 5, 2, TO_DATE('2024-01-20', 'YYYY-MM-DD'), 'выполнен');
+
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (5, 1, 4, TO_DATE('2024-03-05', 'YYYY-MM-DD'), 'ожидает');
+
+INSERT INTO InterlibraryRequests (request_id, source_location_id, destination_location_id, request_date, status) 
+VALUES (5, 1, 4, TO_DATE('2024-10-05', 'YYYY-MM-DD'), 'ожидает');
+
+.-- Подробности заявок (какие книги заказывались)
+--INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+--VALUES (1, 1, 1, 2);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (2, 1, 2, 1);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (3, 2, 3, 1);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (4, 2, 4, 2);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (5, 3, 5, 3);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (6, 4, 1, 1);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (7, 4, 5, 2);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (8, 5, 2, 3);
+
+INSERT INTO InterlibraryRequestDetails (detail_id, request_id, book_id, quantity) 
+VALUES (9, 5, 4, 1);

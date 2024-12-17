@@ -1,47 +1,55 @@
 -- В разработке
 -- 6.	Получить перечень и общее число книг, заказанных на межбиблиотечном абонементе за последний месяц, семестр, год. 
-WITH TimePeriods AS (
+
+-- Получить перечень и общее число книг, заказанных на межбиблиотечном абонементе за последний месяц, семестр, год.
+
+SELECT * FROM InterlibraryRequests;
+
+SELECT * FROM LOCATIONS;
+
+SELECT * FROM Books;
+
   SELECT 
-    'Last Month' AS period,
-    ADD_MONTHS(SYSDATE, -1) AS start_date,
-    SYSDATE AS end_date
-  FROM dual
-  UNION ALL
-  SELECT 
-    'Last Semester' AS period,
-    ADD_MONTHS(SYSDATE, -6) AS start_date,
-    SYSDATE AS end_date
-  FROM dual
-  UNION ALL
-  SELECT 
-    'Last Year' AS period,
-    ADD_MONTHS(SYSDATE, -12) AS start_date,
-    SYSDATE AS end_date
-  FROM dual
-),
-InterlibraryOrders AS (
-  SELECT 
-    bi.book_id,
-    COUNT(bi.book_id) AS total_orders,
-    bi.issue_date
+    ir.request_id,
+    ir.request_date,
+    ird.book_id,
+    ird.QUANTITY 
   FROM 
-    BookIssues bi
+    InterlibraryRequests ir
+  JOIN 
+    InterlibraryRequestDetails ird ON ir.request_id = ird.request_id
   WHERE 
-    bi.status_id = 5 -- Межбиблиотечный абонемент
-  GROUP BY 
-    bi.book_id, bi.issue_date
+    ir.request_date >= ADD_MONTHS(SYSDATE, -4) -- Ограничить запросы за последний год
+
+WITH FilteredRequests AS (
+  SELECT 
+    ir.request_id,
+    ir.request_date,
+    ird.book_id,
+    ird.QUANTITY 
+  FROM 
+    InterlibraryRequests ir
+  JOIN 
+    InterlibraryRequestDetails ird ON ir.request_id = ird.request_id
+  WHERE 
+    ir.request_date >= ADD_MONTHS(SYSDATE, -12) -- Ограничить запросы за последний год
 )
 SELECT 
-  tp.period,
-  LISTAGG(b.title, ', ') WITHIN GROUP (ORDER BY b.title) AS book_list,
-  COUNT(DISTINCT io.book_id) AS total_books
-FROM 
-  TimePeriods tp
-LEFT JOIN 
-  InterlibraryOrders io ON io.issue_date BETWEEN tp.start_date AND tp.end_date
-LEFT JOIN 
-  Books b ON io.book_id = b.book_id
+  CASE 
+    WHEN fr.request_date >= ADD_MONTHS(SYSDATE, -1) THEN 'Last Month'
+    WHEN fr.request_date >= ADD_MONTHS(SYSDATE, -7) THEN 'Last Semester'
+    WHEN fr.request_date >= ADD_MONTHS(SYSDATE, -12) THEN 'Last Year'
+  END AS period
+  ,b.TITLE AS Title
+  , SUM(fr.QUANTITY)
+FROM FilteredRequests fr
+JOIN BOOKS b ON fr.book_id = b.book_id
 GROUP BY 
-  tp.period
-ORDER BY 
-  tp.period DESC;
+  CASE 
+    WHEN request_date >= ADD_MONTHS(SYSDATE, -1) THEN 'Last Month'
+    WHEN request_date >= ADD_MONTHS(SYSDATE, -6) THEN 'Last Semester'
+    WHEN request_date >= ADD_MONTHS(SYSDATE, -12) THEN 'Last Year'
+  END, b.TITLE;
+    
+    
+
